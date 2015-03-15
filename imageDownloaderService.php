@@ -9,8 +9,11 @@
 	$db_conn = mysql_connect($host, $user, $pass) or die("could not connect");
 	mysql_select_db($dbse, $db_conn);
 	
-	require_once 'image_resizer.php';
-	$url = "http://cdn3.123picbox.com/";
+	require_once 'imageResizer.php';
+
+	// $url = "http://cdn3.123picbox.com/";
+	$url = "http://badrullami.github.io/";  
+
 	$query = mysql_query("select * from images where is_downloaded=0 limit 1");
 	
 	while($row = mysql_fetch_array($query)){
@@ -22,15 +25,10 @@
 		// original images
 		$file_original = $row['image_id'].'-'.$title."-o.".pathinfo($row['Original'], PATHINFO_EXTENSION);
 		$path_original = "assets/img/original/03/".$file_original;
-
-		// large2048
-		$file_large2048 = $row['image_id'].'-'.$title."-vl.".pathinfo($row['Original'], PATHINFO_EXTENSION);
-		$path_large2048 = "assets/img/large2048/03/".$file_large2048;
-
-		// large
-		$file_large = $row['image_id'].'-'.$title."-l.".pathinfo($row['Original'], PATHINFO_EXTENSION);
-		$path_large = "assets/img/large/03/".$file_large;
 		
+		$path_large = "";
+		$path_large2048 = "";
+
 		// medium800
 		$file_medium800 = $row['image_id'].'-'.$title."-vm.".pathinfo($row['Original'], PATHINFO_EXTENSION);
 		$path_medium800 = "assets/img/medium800/03/".$file_medium800;
@@ -74,6 +72,11 @@
 				$width_large=0; $height_large=0; $width_large2048=0; $height_large2048=0;
 
 				if($row['Original_Width'] > 1024) : 
+
+					// large
+					$file_large = $row['image_id'].'-'.$title."-l.".pathinfo($row['Original'], PATHINFO_EXTENSION);
+					$path_large = "assets/img/large/03/".$file_large;
+
 					/* resize large 1024 */
 					$width_large = 1024;
 					$height_large = (1024/$row['Original_Width'])*$row['Original_Height'];
@@ -81,6 +84,10 @@
 				endif;
 
 				if($row['Original_Width'] > 2048) : 
+					// large2048
+					$file_large2048 = $row['image_id'].'-'.$title."-vl.".pathinfo($row['Original'], PATHINFO_EXTENSION);
+					$path_large2048 = "assets/img/large2048/03/".$file_large2048;
+
 					/* resize large 2048 */
 					$width_large2048 = 2048;
 					$height_large2048 = (2048/$row['Original_Width'])*$row['Original_Height'];
@@ -109,7 +116,6 @@
 					Large_2048 ='".$url.$path_large2048."', 
 					Large_2048_Width =".$width_large2048.", 
 					Large_2048_Height =".$height_large2048.",
-					Original ='".$url.$path_original."',
 					web_thumbnail ='".$url.$path_small."',
 					web_single ='".$url.$path_medium800."',
 					is_downloaded =1     
@@ -139,6 +145,10 @@
 				$height_large=0; $width_large=0; $height_large2048=0; $width_large2048=0;
 
 				if($row['Original_Height'] > 1024) : 
+					// large
+					$file_large = $row['image_id'].'-'.$title."-l.".pathinfo($row['Original'], PATHINFO_EXTENSION);
+					$path_large = "assets/img/large/03/".$file_large;
+
 					/* resize large 1024 */
 					$height_large = 1024;
 					$width_large = (1024/$row['Original_Height'])*$row['Original_Width'];
@@ -146,6 +156,10 @@
 				endif;
 
 				if($row['Original_Height'] > 2048) : 
+					// large2048
+					$file_large2048 = $row['image_id'].'-'.$title."-vl.".pathinfo($row['Original'], PATHINFO_EXTENSION);
+					$path_large2048 = "assets/img/large2048/03/".$file_large2048;
+
 					/* resize large 2048 */
 					$height_large2048 = 2048;
 					$width_large2048 = (2048/$row['Original_Height'])*$row['Original_Width'];
@@ -153,7 +167,7 @@
 				endif;
 
 				/* get original binary */
-				smart_resize_image(null , file_get_contents($row['Original']), $row['Original_Width'], $row['Original_Height'], false , $path_original, false , false ,100);
+				// smart_resize_image(null , file_get_contents($row['Original']), $row['Original_Width'], $row['Original_Height'], false , $path_original, false , false ,100);
 
 				mysql_query("update images set 
 					Thumbnail ='".$url.$path_thumbnail."', 
@@ -174,7 +188,6 @@
 					Large_2048 ='".$url.$path_large2048."', 
 					Large_2048_Width =".$width_large2048.", 
 					Large_2048_Height =".$height_large2048.",
-					Original ='".$url.$path_original."',
 					web_thumbnail ='".$url.$path_small."',
 					web_single ='".$url.$path_medium800."',
 					is_downloaded =1     
