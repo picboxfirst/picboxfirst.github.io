@@ -11,8 +11,8 @@
 	
 	require_once 'imageResizer.php';
 
-	// $url = "http://cdn3.123picbox.com/";
-	$url = "http://badrullami.github.io/";  
+	$url = "http://cdn3.123picbox.com/";
+	// $url = "http://badrullami.github.io/";  
 
 	$query = mysql_query("select * from images where is_downloaded=0 limit 1");
 	
@@ -95,7 +95,7 @@
 				endif;
 
 				/* get original binary */
-				smart_resize_image(null , file_get_contents($row['Original']), $row['Original_Width'] , $row['Original_Height'], false , $path_original, false , false ,100);
+				// smart_resize_image(null , file_get_contents($row['Original']), $row['Original_Width'] , $row['Original_Height'], false , $path_original, false , false ,100);
 
 				mysql_query("update images set 
 					Thumbnail ='".$url.$path_thumbnail."', 
